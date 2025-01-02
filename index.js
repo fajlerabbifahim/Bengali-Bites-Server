@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 
 // middleware
 
@@ -26,7 +26,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     const menuCollection = client.db("bengali-bites-DB").collection("menu");
     const reviewCollection = client
@@ -35,7 +35,11 @@ async function run() {
 
     //   get all menu data
 
-    app.get("/menu", (req, res));
+    app.get("/menu", async (req, res) => {
+      const result = await menuCollection.find().toArray();
+      res.send(result);
+      console.log("result fior mongo db");
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
@@ -49,6 +53,6 @@ async function run() {
 }
 run().catch(console.dir);
 
-app.listen(() => {
-  console.log("app running in this port ", port);
+app.listen(port, () => {
+  console.log("app running in this port ");
 });
