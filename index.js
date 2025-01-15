@@ -32,13 +32,32 @@ async function run() {
     const reviewCollection = client
       .db("bengali-bites-DB")
       .collection("reviews");
+    const cartCollection = client.db("bengali-bites-DB").collection("carts");
+
+    //   get all reviews data
+    app.get("/reviews", async (req, res) => {
+      const result = await reviewCollection.find().toArray();
+      res.send(result);
+    });
 
     //   get all menu data
-
     app.get("/menu", async (req, res) => {
       const result = await menuCollection.find().toArray();
       res.send(result);
-      console.log("result fior mongo db");
+    });
+
+    //cart post to cartCollection
+
+    app.post("/carts", async (req, res) => {
+      const cartItem = req.body;
+      const result = await cartCollection.insertOne(cartItem);
+      res.send(result);
+    });
+
+    // get cart collection
+    app.get("/carts", async (req, res) => {
+      const result = await cartCollection.find().toArray();
+      res.send(result);
     });
 
     // Send a ping to confirm a successful connection
